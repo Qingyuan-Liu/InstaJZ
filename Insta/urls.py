@@ -26,5 +26,9 @@ urlpatterns = [
     path('post/update/<int:pk>', PostUpdateView.as_view(), name='post_update'),
     path('post/delete/<int:pk>', PostDeleteView.as_view(), name='post_delete'),
     path('like', addLike, name='addLike'),
+<<<<<<< HEAD
     path('user/<int:pk>', UserDetailView.as_view(), name='user_detail'),
 ]
+=======
+]
+>>>>>>> 4f34274659249dec1779ae6aac17b0917d831f55
