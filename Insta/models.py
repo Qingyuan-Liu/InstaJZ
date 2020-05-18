@@ -17,6 +17,18 @@ class InstaUser(AbstractUser):
         blank=True,
         null=True
     )
+    def get_connections(self):
+        #get只能返回一个值，filter可以返回多个值
+        connections=UserConnection.objects.filter(creator=self)
+        return connections
+
+    def get_followers(self):
+        followers=UserConnection.objects.filter(following=self)
+        return followers
+
+    def is_followed_by(self,user):
+        followers=UserConnection.objects.filter(following=self)
+        return followers.filter(creator=user).exists()
 
 class Post(models.Model):
     author=models.ForeignKey(
@@ -43,6 +55,13 @@ class Post(models.Model):
 
 
 
+
+    #解释related_name='likes'
+    #like1--> wentailai like post1
+    #like2--> test like post1
+    #当调用post1.likes-->(like1,like2)
+    #wentailai.likes-->like1
+
 class Like(models.Model):
     post = models.ForeignKey(
         Post, 
@@ -53,12 +72,6 @@ class Like(models.Model):
         on_delete=models.CASCADE,
         related_name='likes'
     )
-    #解释related_name='likes'
-    #like1--> wentailai like post1
-    #like2--> test like post1
-    #当调用post1.likes-->(like1,like2)
-    #wentailai.likes-->like1
-
     class Meta:
         unique_together=("post","user")
         #同一个user和同一个post只能被定义一次
@@ -66,6 +79,31 @@ class Like(models.Model):
     def __str__(self):
         return 'Like:'+self.user.username+' likes '+self.post.title
 
-        
 
-    
+
+
+
+    #con1-->A follows B
+    #A is creator
+    #con2-->A follows C
+    #con3-->D follows A
+    #A.friendship_creator_set-->(con1,con2)
+    #A.friend_set-->(con3)
+
+class UserConnection(models.Model):
+    created=models.DateTimeField(auto_now_add=True,editable=False)
+    creator=models.ForeignKey(
+        InstaUser,
+        on_delete=models.CASCADE,
+        related_name="friendship_creator_set"
+    )
+    following=models.ForeignKey(
+        InstaUser,
+        on_delete=models.CASCADE,
+        related_name="friend_set"
+    )
+
+    def __str__(self):
+        return self.creator.username+' follows '+self.following.username
+
+
