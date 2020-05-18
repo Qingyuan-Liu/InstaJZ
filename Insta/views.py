@@ -1,7 +1,7 @@
 from annoying.decorators import ajax_request
 from django.shortcuts import render
 from django.views.generic import TemplateView,ListView,DetailView
-from .models import Post,Like
+from Insta.models import Post,Like
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse,reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
