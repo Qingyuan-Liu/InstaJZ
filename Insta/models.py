@@ -80,6 +80,17 @@ class Like(models.Model):
         return 'Like:'+self.user.username+' likes '+self.post.title
 
 
+class Comment(models.Model):
+    post = models.name = models.ForeignKey(
+        Post,
+        related_name='comments',
+        on_delete=models.CASCADE)
+    user = models.ForeignKey(InstaUser, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=100)
+    posted_on = models.DateTimeField(auto_now_add=True, editable=False)
+    
+    def __str__(self):
+        return self.comment
 
 
 
